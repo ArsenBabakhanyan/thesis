@@ -1,4 +1,5 @@
-package complex_numbers;
+package complex_number;
+
 import java.math.BigDecimal;
 
 public class ComplexNumber {
@@ -8,6 +9,11 @@ public class ComplexNumber {
 	
 	public ComplexNumber() {
 		this("0", "0");
+	}
+	
+	public ComplexNumber(ComplexNumber that) {
+		real = that.getReal();
+		imaginary = that.getImaginary();
 	}
 	
 	public ComplexNumber(Object re, Object im) {
@@ -72,7 +78,7 @@ public class ComplexNumber {
 	}
 	
 	public String toString() {
-		String str = "{ " + real.toString();
+		String str = "{" + real.toString();
 		
 		if (imaginary.signum() >= 0) {
 			str += " + " + imaginary.abs();
@@ -80,7 +86,7 @@ public class ComplexNumber {
 		else {
 			str += " - " + imaginary.abs();
 		}
-		str += "i }";
+		str += "i}";
 		
 		return str;
 	}

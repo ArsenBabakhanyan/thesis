@@ -7,8 +7,12 @@ public class ComplexNumber {
 	private BigDecimal imaginary;
 	
 	public ComplexNumber() {
-		real = BigDecimal.ZERO;
-		imaginary = BigDecimal.ZERO;
+		this("0", "0");
+	}
+	
+	public ComplexNumber(Object re, Object im) {
+		real = new BigDecimal(re.toString());
+		imaginary = new BigDecimal(im.toString());
 	}
 	
 	public BigDecimal getReal() {

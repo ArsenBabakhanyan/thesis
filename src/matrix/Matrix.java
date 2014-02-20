@@ -45,21 +45,24 @@ public class Matrix {
 	}
 	
 	public String toString() {
-		String str = "\n";
+		String str = "";
 		for (int i = 0; i < matrix.length; i++) {
 			str += "[";
-			for (int j = 0; j < matrix.length-1; j++) {
-				str += matrix[i][j].toString()+", ";
+			for (int j = 0; j < matrix.length; j++) {
+				str += matrix[i][j];
+				if (j != matrix.length-1)
+					str +=", ";
 			}
-			str += matrix[i][matrix.length-1].toString();
-			str += "]\n";
+			str += "]";
+			if (i != matrix.length-1)
+				str += "\n";
 		}
 		return str;
 	}
 
 	// constant matrices
 	
-	public static final Matrix pauliX() {
+	public static final Matrix PAULIX() {
 		Matrix x = new Matrix(new ComplexNumber[][]{
 				{new ComplexNumber(), new ComplexNumber("1", "0")},
 				{new ComplexNumber("1", "0"), new ComplexNumber()}
@@ -67,7 +70,7 @@ public class Matrix {
 		return x;
 	}
 
-	public static final Matrix pauliY() {
+	public static final Matrix PAULIY() {
 		Matrix y = new Matrix(new ComplexNumber[][]{
 				{new ComplexNumber(), new ComplexNumber("0", "-1")},
 				{new ComplexNumber("0", "1"), new ComplexNumber()}
@@ -75,7 +78,7 @@ public class Matrix {
 		return y;
 	}
 
-	public static final Matrix pauliZ() {
+	public static final Matrix PAULIZ() {
 		Matrix z = new Matrix(new ComplexNumber[][]{
 				{new ComplexNumber("1", "0"), new ComplexNumber()},
 				{new ComplexNumber(), new ComplexNumber("-1", "0")}

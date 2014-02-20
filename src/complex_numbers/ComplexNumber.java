@@ -40,45 +40,41 @@ public class ComplexNumber {
 	}
 	
 	public ComplexNumber add(ComplexNumber that) {
-		ComplexNumber comNum = new ComplexNumber();
 				
-		comNum.setReal(real.add(that.getReal()));
-		comNum.setImaginary(imaginary.add(that.getImaginary()));
+		real = real.add(that.getReal());
+		imaginary = imaginary.add(that.getImaginary());
 		
-		return comNum;
+		return this;
 	}
 	
 	public ComplexNumber sub(ComplexNumber that) {
-		ComplexNumber comNum = new ComplexNumber();
 		
-		comNum.setReal(real.subtract(that.getReal()));
-		comNum.setImaginary(imaginary.subtract(that.getImaginary()));
+		real = real.subtract(that.getReal());
+		imaginary = imaginary.subtract(that.getImaginary());
 		
-		return comNum;
+		return this;
 	}
 	
 	public ComplexNumber mul(ComplexNumber that) {
-		ComplexNumber comNum = new ComplexNumber();
+				
+		real = (real.multiply(that.getReal())).subtract(imaginary.multiply(that.getImaginary()));
+		imaginary = (imaginary.multiply(that.getReal())).add(real.multiply(that.getImaginary()));
 		
-		comNum.setReal((real.multiply(that.getReal())).subtract(imaginary.multiply(that.getImaginary())));
-		comNum.setImaginary((imaginary.multiply(that.getReal())).add(real.multiply(that.getImaginary())));
-		
-		return comNum;
+		return this;
 	}
 	
 	public ComplexNumber div(ComplexNumber that) {
-		ComplexNumber comNum = new ComplexNumber();
 		
 		BigDecimal denom = (that.getReal().pow(2)).add(that.getImaginary().pow(2));
 		
-		comNum.setReal((real.multiply(that.getReal()).add(imaginary.multiply(that.getImaginary()))).divide(denom));
-		comNum.setImaginary((imaginary.multiply(that.getReal()).subtract(real.multiply(that.getImaginary()))).divide(denom));
+		real = (real.multiply(that.getReal()).add(imaginary.multiply(that.getImaginary()))).divide(denom);
+		imaginary = (imaginary.multiply(that.getReal()).subtract(real.multiply(that.getImaginary()))).divide(denom);
 		
-		return comNum;
+		return this;
 	}
 	
 	public String toString() {
-		String str = "{" + real.toString();
+		String str = "{" + real;
 		
 		if (imaginary.signum() >= 0) {
 			str += " + " + imaginary.abs();

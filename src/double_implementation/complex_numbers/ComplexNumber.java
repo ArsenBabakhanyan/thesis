@@ -174,4 +174,11 @@ public class ComplexNumber {
 		return tmp;
 	}
 	
+	public static double abs(ComplexNumber that) {
+		return Math.sqrt(
+				Math.pow(that.real, 2) + 
+				Math.pow(that.imaginary, 2)
+				);
+	}
+	
 }

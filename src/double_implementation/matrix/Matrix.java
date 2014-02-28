@@ -184,6 +184,35 @@ public class Matrix {
 	}
 	
 	/**
+	 * Tensor product of two matrixes
+	 */
+	public void tensor(Matrix that) {
+		ComplexNumber[][] m = new ComplexNumber[len()*that.len()][len()*that.len()];
+		for (int i = 0; i < len(); i++) {
+			for (int j = 0; j < len(); j++) {
+				Matrix tmp = mul(matrix[i][j], that);
+				for (int k = 0; k < tmp.len(); k++) {
+					for (int l = 0; l < tmp.len(); l++){
+						m[i*tmp.len()+k][j*tmp.len()+l] = tmp.matrix[k][l];
+					}
+				}
+			}
+		}
+		matrix = m;
+	}
+	
+	/**
+	 * Devides matrix by value
+	 */
+	public void div(ComplexNumber value) {
+		for (int i = 0; i < len(); i++) {
+			for (int j = 0; j < len(); j++) {
+				matrix[i][j].div(value); 
+			}
+		}
+	}
+	
+	/**
 	 * Returnes dimension of the matrix
 	 */
 	public int len() {
@@ -270,6 +299,25 @@ public class Matrix {
 		}
 		return tmp;
 	}
+	
+	/**
+	 * Returns a matrix that is tensor product of two matrixes
+	 */
+	public static Matrix tensor(Matrix first, Matrix second) {
+		ComplexNumber[][] m = new ComplexNumber[first.len()*second.len()][first.len()*second.len()];
+		for (int i = 0; i < first.len(); i++) {
+			for (int j = 0; j < second.len(); j++) {
+				Matrix tmp = mul(first.matrix[i][j], second);
+				for (int k = 0; k < tmp.len(); k++) {
+					for (int l = 0; l < tmp.len(); l++){
+						m[i*tmp.len()+k][j*tmp.len()+l] = tmp.matrix[k][l];
+					}
+				}
+			}
+		}
+		return new Matrix(m);
+	}
+	
 	
 	/**
 	 * Returns Pauli X matrix<br />

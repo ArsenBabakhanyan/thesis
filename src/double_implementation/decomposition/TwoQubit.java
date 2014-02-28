@@ -1,14 +1,25 @@
 package decomposition;
 
-import complex_number.ComplexNumber;
+import complex_numbers.ComplexNumber;
 import matrix.Matrix;
 
+/**
+ * This class provides all functionality concerning decomposition of two qubit systems
+ * @author Arsen Babakhanyan
+ */
 public class TwoQubit {
 	
+	/**
+	 * Enum containing two predefined values <br />
+	 * you can use either First or Second qubit 
+	 */
 	public enum Qubit2{
 		First, Second
 	};
 	
+	/**
+	 * Returns partial trace of the given 4x4 matrix
+	 */
 	public static Matrix partialTrace(Matrix that, Qubit2 num) {
 		if (that.len() != 4) {
 			throw new IllegalArgumentException("Matrix must be of size 4x4");
@@ -30,6 +41,9 @@ public class TwoQubit {
 		return m;
 	}
 	
+	/**
+	 * returns sqrt(|first|^2 + |second|^2) 
+	 */
 	public static double SAP2 (ComplexNumber first, ComplexNumber second) {
 		return Math.sqrt(
 				ComplexNumber.abs(ComplexNumber.mul(first, first)) + 
@@ -37,20 +51,53 @@ public class TwoQubit {
 			);
 	}
 	
-	public static double[] SU2SU2(Matrix that) {
+	/**
+	 * Decomposition of Matrix that according SU2xSU2 procedure  (multi-thraded) 
+	 */
+	public static double[] SU2SU2(final Matrix that) {
 		
-		Matrix S1 = partialTrace(that, Qubit2.Second);
-		Matrix S2 = partialTrace(that, Qubit2.First);
+		final double[] val0 = new double[3];
+		final double[] val1 = new double[3];
+		
+		Thread t1 = new Thread(new Runnable() {			
+			public void run() {
+				Matrix S1 = partialTrace(that, Qubit2.Second);
 				
-		double c1 = SAP2(S1.getElement(0, 0), S1.getElement(1, 0));
-		double c2 = SAP2(S2.getElement(0, 0), S2.getElement(1, 0));
-		
-		S2.div(new ComplexNumber(c2, 0));  /// P
-		S1.div(new ComplexNumber(c1, 0));  /// Q
+				double c1 = SAP2(S1.getElement(0, 0), S1.getElement(1, 0));
+				S1.div(new ComplexNumber(c1, 0));  /// Q
+				
+				double[] val = OneQubit.KAKDec(S1);
+				val1[0] = val[0];
+				val1[1] = val[1];
+				val1[2] = val[2];
+			}
+		});
 
-		double[] val0 = OneQubit.KAKDec(S2);
+		Thread t2 = new Thread(new Runnable() {			
+			public void run() {
+				Matrix S2 = partialTrace(that, Qubit2.First);
+
+				double c2 = SAP2(S2.getElement(0, 0), S2.getElement(1, 0));
+				S2.div(new ComplexNumber(c2, 0));  /// P
+				
+				double[] val = OneQubit.KAKDec(S2);
+				val0[0] = val[0];
+				val0[1] = val[1];
+				val0[2] = val[2];
+
+			}
+		});
 		
-		double[] val1 = OneQubit.KAKDec(S1);
+		t1.start();
+		t2.start();
+		
+		try {
+			t1.join();
+			t2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		
 		return new double[]{val0[0], val0[1], val0[2], val1[0], val1[1], val1[2]};
 	}

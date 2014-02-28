@@ -1,17 +1,16 @@
 package decomposition;
 import matrix.Matrix;
-import complex_number.ComplexNumber;
-//import java.math.BigDecimal;
+import complex_numbers.ComplexNumber;
 
 /**
  * This class provides all functionality concerning decomposition of one qubit systems
  * @author Arsen Babakhanyan
- *
  */
 public class OneQubit {
 	
 	/**
-	 * This method decomposes Matrix G into three matrices a returns array containing the matrices
+	 * This method decomposes Matrix G into three matrices (YZY) <br />
+	 * and returns array containing angles of rotations matrices
 	 */
 	public static double[] KAKDec(Matrix G) {
 		double[] abc = new double[3];
@@ -40,7 +39,7 @@ public class OneQubit {
 	}
 	
 	/**
-	 * Returns rotation Matrix around X axis by andle = value 
+	 * Returns rotation Matrix around X axis by angle = value 
 	 */
 	public static Matrix RX(double value) {
 

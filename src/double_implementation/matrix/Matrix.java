@@ -1,5 +1,5 @@
 package matrix;
-import complex_number.ComplexNumber;
+import complex_numbers.ComplexNumber;
 
 /**
  * Class to work with NxN matrixes of ComplexNumbers
@@ -184,7 +184,7 @@ public class Matrix {
 	}
 	
 	/**
-	 * Tensor product of two matrixes
+	 * Tensor product of this with that
 	 */
 	public void tensor(Matrix that) {
 		ComplexNumber[][] m = new ComplexNumber[len()*that.len()][len()*that.len()];
@@ -202,7 +202,7 @@ public class Matrix {
 	}
 	
 	/**
-	 * Devides matrix by value
+	 * Devides all emenents of this matrix by value
 	 */
 	public void div(ComplexNumber value) {
 		for (int i = 0; i < len(); i++) {

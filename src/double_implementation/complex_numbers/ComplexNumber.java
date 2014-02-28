@@ -1,4 +1,4 @@
-package complex_number;
+package complex_numbers;
 //import java.math.BigDecimal;
 
 /**
@@ -174,6 +174,10 @@ public class ComplexNumber {
 		return tmp;
 	}
 	
+	/**
+	 * Returns abs of the given ComplexNumber <br />
+	 * sqrt (re^2 + im^2)
+	 */
 	public static double abs(ComplexNumber that) {
 		return Math.sqrt(
 				Math.pow(that.real, 2) + 

@@ -148,6 +148,17 @@ public class ComplexNumber {
 	}
 	
 	/**
+	 * Returns sum of N complex numbers 
+	 */
+	public static ComplexNumber addN(ComplexNumber first, ComplexNumber... second) {
+		ComplexNumber tmp = new ComplexNumber(first);
+		for (ComplexNumber cn : second) {
+			tmp.add(cn);
+		}
+		return tmp;
+	}
+	
+	/**
 	 *  Returns first - second
 	 */
 	public static ComplexNumber sub(ComplexNumber first, ComplexNumber second) {

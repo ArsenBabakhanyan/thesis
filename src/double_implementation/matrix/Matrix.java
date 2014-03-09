@@ -376,6 +376,22 @@ public class Matrix {
 	}
 	
 	/**
+	 * Returns Bell state matrix (magic basis)<br />
+	 * |1.4 0     0    1.4i| <br />
+	 * |0   1.4i  1.4  0   | <br />
+	 * |0   1.4i -1.4  0   | <br />
+	 * |1.4 0     0   -1.4 |
+	 */
+	public static final Matrix B() {
+		return new Matrix(new ComplexNumber[][]{
+				{new ComplexNumber(1, 0), new ComplexNumber(), new ComplexNumber(), new ComplexNumber(0, 1)},
+				{new ComplexNumber(), new ComplexNumber(0, 1), new ComplexNumber(1, 0), new ComplexNumber()},
+				{new ComplexNumber(), new ComplexNumber(0, 1), new ComplexNumber(-1, 0), new ComplexNumber()},
+				{new ComplexNumber(1, 0), new ComplexNumber(), new ComplexNumber(), new ComplexNumber(0, -1)}
+		});
+	}
+	
+	/**
 	 * Compares two matrixes if difference between them is more then 0.000001 returns false 
 	 */
 	public static final boolean equals(Matrix first, Matrix second) {

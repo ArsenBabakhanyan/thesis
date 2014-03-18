@@ -1,4 +1,5 @@
 package complex_numbers;
+
 //import java.math.BigDecimal;
 
 /**
@@ -190,10 +191,53 @@ public class ComplexNumber {
 	 * sqrt (re^2 + im^2)
 	 */
 	public static double abs(ComplexNumber that) {
-		return Math.sqrt(
-				Math.pow(that.real, 2) + 
-				Math.pow(that.imaginary, 2)
-				);
+		double absRe = Math.abs(that.getReal());
+	    double absIm = Math.abs(that.getImaginary());
+	    if((absRe==0)&&(absIm==0)) {
+	      return 0;
+	    } else if(absRe>absIm) {
+	      double temp = absIm/absRe;
+	      return absRe*Math.sqrt(1+temp*temp);
+	    } else {
+	      double temp = absRe/absIm;
+	      return absIm*Math.sqrt(1+temp*temp);
+	    }
 	}
 	
+	/**
+	 *	Returns sqrt of the ComplexNumber 
+	 */
+	public static ComplexNumber sqrt(ComplexNumber that) {
+	    ComplexNumber c;
+	    double absRe, absIm, w, r;
+	    if((that.getReal()==0)&&(that.getImaginary()==0)) {
+	      c = new ComplexNumber();
+	    } else {
+	      absRe = Math.abs(that.getReal());
+	      absIm = Math.abs(that.getImaginary());
+	      if(absRe>=absIm) {
+	        r = absIm/absRe;
+	        w = Math.sqrt(absRe)*Math.sqrt(0.5*(1.0+Math.sqrt(1.0+r*r)));
+	      } else {
+	        r = absRe/absIm;
+	        w = Math.sqrt(absIm)*Math.sqrt(0.5*(r+Math.sqrt(1.0+r*r)));
+	      }
+	      if(that.getReal()>=0) {
+	        c = new ComplexNumber(w, that.getImaginary()/(2.0*w));
+	      } else {
+	        if(that.getImaginary()<0) {
+	          w = -w;
+	        }
+	        c = new ComplexNumber(that.getImaginary()/(2.0*w), w);
+	      }
+	    }
+	    return c;
+	  }
+	
+	/**
+	 * Returns a new ComplexNumber with -that.re and -that.im
+	 */
+	public static ComplexNumber neg(ComplexNumber that) {
+		return new ComplexNumber(that.getReal(), that.getImaginary());
+	}
 }

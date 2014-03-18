@@ -1,4 +1,7 @@
 package matrix;
+
+import opensourcephysics.Complex;
+import opensourcephysics.ComplexEigenvalueDecomposition;
 import complex_numbers.ComplexNumber;
 
 /**
@@ -410,6 +413,36 @@ public class Matrix {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 *	Returns Eigenvalues of the given array 
+	 */
+	public static final ComplexNumber[] eigen (Matrix that) {
+		ComplexNumber[][] m = that.getMatrix();
+		int len = m.length;
+		ComplexNumber[] eigens = new ComplexNumber[len];
+
+		//wraps my objects to objects of opensourcephysics
+		//and uses opensourcephysics functionality to get eigenvalues
+		Complex[][] m_ = new Complex[len][len];
+		Complex[] eigens_ = new Complex[len];
+		Complex[][] vec = new Complex[len][len];
+		boolean[] e = new boolean[len];
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				m_[i][j] = new Complex(m[i][j].getReal(), m[i][j].getImaginary());
+			}
+		}
+		
+		ComplexEigenvalueDecomposition.eigen(m_, eigens_, vec, e);
+		
+		for (int i = 0; i < len; i++) {
+			eigens[i] = new ComplexNumber(eigens_[i].re(), eigens_[i].im());
+		}
+		
+		return eigens;
 	}
 
 }

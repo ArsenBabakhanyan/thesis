@@ -1,5 +1,7 @@
 package decomposition;
 
+import java.util.Arrays;
+
 import complex_numbers.ComplexNumber;
 import matrix.Matrix;
 
@@ -135,6 +137,248 @@ public class TwoQubit {
 	}
 
 	/**
+	 * Returns associate matrix of SO4
+	 */
+	public static Matrix associateSO4(Matrix that) {
+		Matrix associate = new Matrix(4);
+		double tmp;
+		
+		tmp =     that.getElement(0, 0).getReal()
+				+ that.getElement(1, 1).getReal()
+				+ that.getElement(2, 2).getReal()
+				+ that.getElement(3, 3).getReal();
+		associate.setElement(0, 0, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 1).getReal()
+				+ that.getElement(1, 0).getReal()
+				+ that.getElement(2, 3).getReal()
+				- that.getElement(3, 2).getReal();
+		associate.setElement(0, 1, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 2).getReal()
+				- that.getElement(1, 3).getReal()
+				+ that.getElement(2, 0).getReal()
+				+ that.getElement(3, 1).getReal();
+		associate.setElement(0, 2, new ComplexNumber(tmp/4., 0));
+		
+		tmp =   - that.getElement(0, 3).getReal()
+				+ that.getElement(1, 2).getReal()
+				- that.getElement(2, 1).getReal()
+				+ that.getElement(3, 0).getReal();
+		associate.setElement(0, 3, new ComplexNumber(tmp/4., 0));
+	
+		
+		tmp =   - that.getElement(0, 1).getReal()
+				+ that.getElement(1, 0).getReal()
+				- that.getElement(2, 3).getReal()
+				+ that.getElement(3, 2).getReal();
+		associate.setElement(1, 0, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 0).getReal()
+				- that.getElement(1, 1).getReal()
+				+ that.getElement(2, 2).getReal()
+				+ that.getElement(3, 3).getReal();
+		associate.setElement(1, 1, new ComplexNumber(tmp/4., 0));
+	
+		tmp =     that.getElement(0, 3).getReal()
+				- that.getElement(1, 2).getReal()
+				- that.getElement(2, 1).getReal()
+				+ that.getElement(3, 0).getReal();
+		associate.setElement(1, 2, new ComplexNumber(tmp/4., 0));
+		
+		tmp =   - that.getElement(0, 2).getReal()
+				- that.getElement(1, 3).getReal()
+				- that.getElement(2, 0).getReal()
+				- that.getElement(3, 1).getReal();
+		associate.setElement(1, 3, new ComplexNumber(tmp/4., 0));
+	
+	
+		tmp =   - that.getElement(0, 2).getReal()
+				+ that.getElement(1, 3).getReal()
+				+ that.getElement(2, 0).getReal()
+				- that.getElement(3, 1).getReal();
+		associate.setElement(2, 0, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 3).getReal()
+				- that.getElement(1, 2).getReal()
+				- that.getElement(2, 1).getReal()
+				- that.getElement(3, 0).getReal();
+		associate.setElement(2, 1, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 0).getReal()
+				+ that.getElement(1, 1).getReal()
+				- that.getElement(2, 2).getReal()
+				+ that.getElement(3, 3).getReal();
+		associate.setElement(2, 2, new ComplexNumber(tmp/4., 0));
+		
+		tmp =     that.getElement(0, 1).getReal()
+				+ that.getElement(1, 0).getReal()
+				- that.getElement(2, 3).getReal()
+				- that.getElement(3, 2).getReal();
+		associate.setElement(2, 3, new ComplexNumber(tmp/4., 0));
+		
+		tmp =   - that.getElement(0, 3).getReal()
+				- that.getElement(1, 2).getReal()
+				+ that.getElement(2, 1).getReal()
+				+ that.getElement(3, 0).getReal();
+		associate.setElement(3, 0, new ComplexNumber(tmp/4., 0));
+	
+		tmp =     that.getElement(0, 2).getReal()
+				- that.getElement(1, 3).getReal()
+				+ that.getElement(2, 0).getReal()
+				- that.getElement(3, 1).getReal();
+		associate.setElement(3, 1, new ComplexNumber(tmp/4., 0));
+	
+		tmp =   - that.getElement(0, 1).getReal()
+				- that.getElement(1, 0).getReal()
+				- that.getElement(2, 3).getReal()
+				- that.getElement(3, 2).getReal();
+		associate.setElement(3, 2, new ComplexNumber(tmp/4., 0));
+		
+		tmp =   - that.getElement(0, 0).getReal()
+				+ that.getElement(1, 1).getReal()
+				+ that.getElement(2, 2).getReal()
+				- that.getElement(3, 3).getReal();
+		associate.setElement(3, 3, new ComplexNumber(tmp/4., 0));
+	
+	
+		return associate;
+	}
+
+	/**
+	 * Returns quaternion from left 
+	 */
+	public static double[] abcd(Matrix that) {
+		
+		double a,b,c,d;
+		
+		a = Math.sqrt(Math.pow(that.getElement(0, 0).getReal(), 2)
+				    + Math.pow(that.getElement(0, 1).getReal(), 2)
+				    + Math.pow(that.getElement(0, 2).getReal(), 2)
+				    + Math.pow(that.getElement(0, 3).getReal(), 2));
+		
+		b = Math.sqrt(Math.pow(that.getElement(1, 0).getReal(), 2)
+					+ Math.pow(that.getElement(1, 1).getReal(), 2)
+					+ Math.pow(that.getElement(1, 2).getReal(), 2)
+					+ Math.pow(that.getElement(1, 3).getReal(), 2));
+	
+		c = Math.sqrt(Math.pow(that.getElement(2, 0).getReal(), 2)
+			    	+ Math.pow(that.getElement(2, 1).getReal(), 2)
+			    	+ Math.pow(that.getElement(2, 2).getReal(), 2)
+			    	+ Math.pow(that.getElement(2, 3).getReal(), 2));
+	
+		d = Math.sqrt(Math.pow(that.getElement(3, 0).getReal(), 2)
+			    	+ Math.pow(that.getElement(3, 1).getReal(), 2)
+			    	+ Math.pow(that.getElement(3, 2).getReal(), 2)
+			    	+ Math.pow(that.getElement(3, 3).getReal(), 2));
+	
+		// determine signs
+		if (that.getElement(0, 0).getReal() < 0)
+			a = -Math.abs(a);
+		else 
+			a = Math.abs(a);
+		
+		if (that.getElement(1, 0).getReal() < 0)
+			b = -Math.abs(b);
+		else 
+			b = Math.abs(b);
+		
+		if (that.getElement(2, 0).getReal() < 0)
+			c = -Math.abs(c);
+		else 
+			c = Math.abs(c);
+		
+		if (that.getElement(3, 0).getReal() < 0)
+			d = -Math.abs(d);
+		else 
+			d = Math.abs(d);
+				
+		return new double[]{a, b, c, d};
+	}
+
+	/**
+	 * Returns quaternion from right 
+	 */
+	public static double[] pqrs(Matrix that, double a) {
+	
+		double p,q,r,s;
+		
+		p = Math.sqrt(Math.pow(that.getElement(0, 0).getReal(), 2)
+				    + Math.pow(that.getElement(1, 0).getReal(), 2)
+				    + Math.pow(that.getElement(2, 0).getReal(), 2)
+				    + Math.pow(that.getElement(3, 0).getReal(), 2));
+	
+		q = Math.sqrt(Math.pow(that.getElement(0, 1).getReal(), 2)
+					+ Math.pow(that.getElement(1, 1).getReal(), 2)
+					+ Math.pow(that.getElement(2, 1).getReal(), 2)
+					+ Math.pow(that.getElement(3, 1).getReal(), 2));
+	
+		r = Math.sqrt(Math.pow(that.getElement(0, 2).getReal(), 2)
+			    	+ Math.pow(that.getElement(1, 2).getReal(), 2)
+			    	+ Math.pow(that.getElement(2, 2).getReal(), 2)
+			    	+ Math.pow(that.getElement(3, 2).getReal(), 2));
+	
+		s = Math.sqrt(Math.pow(that.getElement(0, 3).getReal(), 2)
+			    	+ Math.pow(that.getElement(1, 3).getReal(), 2)
+			    	+ Math.pow(that.getElement(2, 3).getReal(), 2)
+			    	+ Math.pow(that.getElement(3, 3).getReal(), 2));
+		
+		// determine signs
+		if (that.getElement(0, 0).getReal() < 0)
+			p = -Math.abs(p);
+		else 
+			p = Math.abs(p);
+		
+		if (that.getElement(0, 1).getReal() < 0)
+			q = -Math.abs(q);
+		else 
+			q = Math.abs(q);
+		
+		if (that.getElement(0, 2).getReal() < 0)
+			r = -Math.abs(r);
+		else 
+			r = Math.abs(r);
+		
+		if (that.getElement(0, 3).getReal() < 0)
+			s = -Math.abs(s);
+		else 
+			s = Math.abs(s);
+	
+		if (a < 0) {
+			p = -p;
+			q = -q;
+			r = -r; 
+			s = -s;
+		}
+		
+		return new double[]{p, q, r, s};
+	}
+
+	/**
+	 * Returns left isoclinic factor based on a, b, c, d 
+	 */
+	public static Matrix leftFactor(double[] abcd) {
+		return new Matrix (new ComplexNumber[][] {
+				{new ComplexNumber(abcd[0], 0), new ComplexNumber(-abcd[1], 0), new ComplexNumber(-abcd[2], 0), new ComplexNumber(-abcd[3], 0)},
+				{new ComplexNumber(abcd[1], 0), new ComplexNumber( abcd[0], 0), new ComplexNumber(-abcd[3], 0), new ComplexNumber( abcd[2], 0)},
+				{new ComplexNumber(abcd[2], 0), new ComplexNumber( abcd[3], 0), new ComplexNumber( abcd[0], 0), new ComplexNumber(-abcd[1], 0)},
+				{new ComplexNumber(abcd[3], 0), new ComplexNumber(-abcd[2], 0), new ComplexNumber( abcd[1], 0), new ComplexNumber( abcd[0], 0)}
+		});
+	}
+
+	/**
+	 * Returns right isoclinic factor based on p, q, r, s 
+	 */
+	public static Matrix rightFactor(double[] pqrs) {
+		return new Matrix (new ComplexNumber[][] {
+				{new ComplexNumber(pqrs[0], 0), new ComplexNumber(-pqrs[1], 0), new ComplexNumber(-pqrs[2], 0), new ComplexNumber(-pqrs[3], 0)},
+				{new ComplexNumber(pqrs[1], 0), new ComplexNumber( pqrs[0], 0), new ComplexNumber( pqrs[3], 0), new ComplexNumber(-pqrs[2], 0)},
+				{new ComplexNumber(pqrs[2], 0), new ComplexNumber(-pqrs[3], 0), new ComplexNumber( pqrs[0], 0), new ComplexNumber( pqrs[1], 0)},
+				{new ComplexNumber(pqrs[3], 0), new ComplexNumber( pqrs[2], 0), new ComplexNumber(-pqrs[1], 0), new ComplexNumber( pqrs[0], 0)}
+		});
+	}
+
+	/**
 	 * Isoclinic decomposition of SO4
 	 */
 	public static double[] SO4(Matrix that) {
@@ -181,246 +425,201 @@ public class TwoQubit {
 		return new double[] { a[0], a[1], a[2], b[0], b[1], b[2]};
 	}
 	
-	/**
-	 * Returns left isoclinic factor based on a, b, c, d 
-	 */
-	public static Matrix leftFactor(double[] abcd) {
-		return new Matrix (new ComplexNumber[][] {
-				{new ComplexNumber(abcd[0], 0), new ComplexNumber(-abcd[1], 0), new ComplexNumber(-abcd[2], 0), new ComplexNumber(-abcd[3], 0)},
-				{new ComplexNumber(abcd[1], 0), new ComplexNumber( abcd[0], 0), new ComplexNumber(-abcd[3], 0), new ComplexNumber( abcd[2], 0)},
-				{new ComplexNumber(abcd[2], 0), new ComplexNumber( abcd[3], 0), new ComplexNumber( abcd[0], 0), new ComplexNumber(-abcd[1], 0)},
-				{new ComplexNumber(abcd[3], 0), new ComplexNumber(-abcd[2], 0), new ComplexNumber( abcd[1], 0), new ComplexNumber( abcd[0], 0)}
-		});
-	}
-
-	/**
-	 * Returns right isoclinic factor based on p, q, r, s 
-	 */
-	public static Matrix rightFactor(double[] pqrs) {
-		return new Matrix (new ComplexNumber[][] {
-				{new ComplexNumber(pqrs[0], 0), new ComplexNumber(-pqrs[1], 0), new ComplexNumber(-pqrs[2], 0), new ComplexNumber(-pqrs[3], 0)},
-				{new ComplexNumber(pqrs[1], 0), new ComplexNumber( pqrs[0], 0), new ComplexNumber( pqrs[3], 0), new ComplexNumber(-pqrs[2], 0)},
-				{new ComplexNumber(pqrs[2], 0), new ComplexNumber(-pqrs[3], 0), new ComplexNumber( pqrs[0], 0), new ComplexNumber( pqrs[1], 0)},
-				{new ComplexNumber(pqrs[3], 0), new ComplexNumber( pqrs[2], 0), new ComplexNumber(-pqrs[1], 0), new ComplexNumber( pqrs[0], 0)}
-		});
-	}
-
-	/**
-	 * Returns associate matrix of SO4
-	 */
-	public static Matrix associateSO4(Matrix that) {
-		Matrix associate = new Matrix(4);
-		double tmp;
-		
-		tmp =     that.getElement(0, 0).getReal()
-				+ that.getElement(1, 1).getReal()
-				+ that.getElement(2, 2).getReal()
-				+ that.getElement(3, 3).getReal();
-		associate.setElement(0, 0, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 1).getReal()
-				+ that.getElement(1, 0).getReal()
-				+ that.getElement(2, 3).getReal()
-				- that.getElement(3, 2).getReal();
-		associate.setElement(0, 1, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 2).getReal()
-				- that.getElement(1, 3).getReal()
-				+ that.getElement(2, 0).getReal()
-				+ that.getElement(3, 1).getReal();
-		associate.setElement(0, 2, new ComplexNumber(tmp/4., 0));
-		
-		tmp =   - that.getElement(0, 3).getReal()
-				+ that.getElement(1, 2).getReal()
-				- that.getElement(2, 1).getReal()
-				+ that.getElement(3, 0).getReal();
-		associate.setElement(0, 3, new ComplexNumber(tmp/4., 0));
-
-		
-		tmp =   - that.getElement(0, 1).getReal()
-				+ that.getElement(1, 0).getReal()
-				- that.getElement(2, 3).getReal()
-				+ that.getElement(3, 2).getReal();
-		associate.setElement(1, 0, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 0).getReal()
-				- that.getElement(1, 1).getReal()
-				+ that.getElement(2, 2).getReal()
-				+ that.getElement(3, 3).getReal();
-		associate.setElement(1, 1, new ComplexNumber(tmp/4., 0));
-
-		tmp =     that.getElement(0, 3).getReal()
-				- that.getElement(1, 2).getReal()
-				- that.getElement(2, 1).getReal()
-				+ that.getElement(3, 0).getReal();
-		associate.setElement(1, 2, new ComplexNumber(tmp/4., 0));
-		
-		tmp =   - that.getElement(0, 2).getReal()
-				- that.getElement(1, 3).getReal()
-				- that.getElement(2, 0).getReal()
-				- that.getElement(3, 1).getReal();
-		associate.setElement(1, 3, new ComplexNumber(tmp/4., 0));
-
-
-		tmp =   - that.getElement(0, 2).getReal()
-				+ that.getElement(1, 3).getReal()
-				+ that.getElement(2, 0).getReal()
-				- that.getElement(3, 1).getReal();
-		associate.setElement(2, 0, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 3).getReal()
-				- that.getElement(1, 2).getReal()
-				- that.getElement(2, 1).getReal()
-				- that.getElement(3, 0).getReal();
-		associate.setElement(2, 1, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 0).getReal()
-				+ that.getElement(1, 1).getReal()
-				- that.getElement(2, 2).getReal()
-				+ that.getElement(3, 3).getReal();
-		associate.setElement(2, 2, new ComplexNumber(tmp/4., 0));
-		
-		tmp =     that.getElement(0, 1).getReal()
-				+ that.getElement(1, 0).getReal()
-				- that.getElement(2, 3).getReal()
-				- that.getElement(3, 2).getReal();
-		associate.setElement(2, 3, new ComplexNumber(tmp/4., 0));
-		
-		tmp =   - that.getElement(0, 3).getReal()
-				- that.getElement(1, 2).getReal()
-				+ that.getElement(2, 1).getReal()
-				+ that.getElement(3, 0).getReal();
-		associate.setElement(3, 0, new ComplexNumber(tmp/4., 0));
-
-		tmp =     that.getElement(0, 2).getReal()
-				- that.getElement(1, 3).getReal()
-				+ that.getElement(2, 0).getReal()
-				- that.getElement(3, 1).getReal();
-		associate.setElement(3, 1, new ComplexNumber(tmp/4., 0));
-
-		tmp =   - that.getElement(0, 1).getReal()
-				- that.getElement(1, 0).getReal()
-				- that.getElement(2, 3).getReal()
-				- that.getElement(3, 2).getReal();
-		associate.setElement(3, 2, new ComplexNumber(tmp/4., 0));
-		
-		tmp =   - that.getElement(0, 0).getReal()
-				+ that.getElement(1, 1).getReal()
-				+ that.getElement(2, 2).getReal()
-				- that.getElement(3, 3).getReal();
-		associate.setElement(3, 3, new ComplexNumber(tmp/4., 0));
-
-
-		return associate;
-	}
 	
-	/**
-	 * Returns quaternion from left 
-	 */
-	public static double[] abcd(Matrix that) {
+	
+	
+	
+	
+	public static double[] SU4(Matrix that) {
+		Matrix G = Matrix.mul(Matrix.adjoint(Matrix.B()), that, Matrix.B());
+		Matrix Msquare = Matrix.mul(Matrix.transpose(G), G);
 		
-		double a,b,c,d;
+		double[] abc = new double[3];
+		Matrix[] AK = MsqDec(Msquare, abc);
 		
-		a = Math.sqrt(Math.pow(that.getElement(0, 0).getReal(), 2)
-				    + Math.pow(that.getElement(0, 1).getReal(), 2)
-				    + Math.pow(that.getElement(0, 2).getReal(), 2)
-				    + Math.pow(that.getElement(0, 3).getReal(), 2));
+		Matrix k2SO = AK[0];
+		Matrix ASo = AK[1];
 		
-		b = Math.sqrt(Math.pow(that.getElement(1, 0).getReal(), 2)
-					+ Math.pow(that.getElement(1, 1).getReal(), 2)
-					+ Math.pow(that.getElement(1, 2).getReal(), 2)
-					+ Math.pow(that.getElement(1, 3).getReal(), 2));
-
-		c = Math.sqrt(Math.pow(that.getElement(2, 0).getReal(), 2)
-			    	+ Math.pow(that.getElement(2, 1).getReal(), 2)
-			    	+ Math.pow(that.getElement(2, 2).getReal(), 2)
-			    	+ Math.pow(that.getElement(2, 3).getReal(), 2));
-
-		d = Math.sqrt(Math.pow(that.getElement(3, 0).getReal(), 2)
-			    	+ Math.pow(that.getElement(3, 1).getReal(), 2)
-			    	+ Math.pow(that.getElement(3, 2).getReal(), 2)
-			    	+ Math.pow(that.getElement(3, 3).getReal(), 2));
-
-		// determine signs
-		if (that.getElement(0, 0).getReal() < 0)
-			a = -Math.abs(a);
-		else 
-			a = Math.abs(a);
+		double[] factorsk2SO = positiveSU2SU2(k2SO);
 		
-		if (that.getElement(1, 0).getReal() < 0)
-			b = -Math.abs(b);
-		else 
-			b = Math.abs(b);
+		Matrix P2 = OneQubit.YZYMatrix(factorsk2SO[0], factorsk2SO[1], factorsk2SO[2]);
+		Matrix Q2 = OneQubit.YZYMatrix(factorsk2SO[3], factorsk2SO[4], factorsk2SO[5]);
 		
-		if (that.getElement(2, 0).getReal() < 0)
-			c = -Math.abs(c);
-		else 
-			c = Math.abs(c);
-		
-		if (that.getElement(3, 0).getReal() < 0)
-			d = -Math.abs(d);
-		else 
-			d = Math.abs(d);
+		Matrix K2 = Matrix.kron(P2, Q2);
+		Matrix A = Matrix.mul(Matrix.B(), ASo, Matrix.adjoint(Matrix.B()));
+		Matrix K1 = Matrix.mul(that, Matrix.adjoint(K2), Matrix.adjoint(A));
 				
-		return new double[]{a, b, c, d};
+		Matrix K1So = Matrix.mul(Matrix.adjoint(Matrix.B()), K1, Matrix.B());
+		
+		double[] abcd12 = SO4(K1So);
+//					a2,b2,c2 = su2.fcartanYZYf(P1)
+//				    a1,b1,c1 = su2.fcartanYZYf(Q1)
+//				    p2,q2,r2 = su2.fcartanYZYf(P2)
+//				    p1,q1,r1 = su2.fcartanYZYf(Q2)
+//
+//		return [a2,b2,c2,a1,b1,c1,a,b,c,p2,q2,r2,p1,q1,r1,K1,A,K2,P2,Q2,P1,Q1]
+		
+		
+		return new double[] {abcd12[0], abcd12[1], abcd12[2], abcd12[3], abcd12[4], abcd12[5],
+							 abc[0], abc[1], abc[2], 
+							 factorsk2SO[0], factorsk2SO[1], factorsk2SO[2], factorsk2SO[3], factorsk2SO[4], factorsk2SO[5] };
 	}
 	
-	/**
-	 * Returns quaternion from right 
-	 */
-	public static double[] pqrs(Matrix that, double a) {
-	
-		double p,q,r,s;
-		
-		p = Math.sqrt(Math.pow(that.getElement(0, 0).getReal(), 2)
-				    + Math.pow(that.getElement(1, 0).getReal(), 2)
-				    + Math.pow(that.getElement(2, 0).getReal(), 2)
-				    + Math.pow(that.getElement(3, 0).getReal(), 2));
-	
-		q = Math.sqrt(Math.pow(that.getElement(0, 1).getReal(), 2)
-					+ Math.pow(that.getElement(1, 1).getReal(), 2)
-					+ Math.pow(that.getElement(2, 1).getReal(), 2)
-					+ Math.pow(that.getElement(3, 1).getReal(), 2));
+	public static Matrix[] MsqDec (Matrix Msq, double[] abc) {
 
-		r = Math.sqrt(Math.pow(that.getElement(0, 2).getReal(), 2)
-			    	+ Math.pow(that.getElement(1, 2).getReal(), 2)
-			    	+ Math.pow(that.getElement(2, 2).getReal(), 2)
-			    	+ Math.pow(that.getElement(3, 2).getReal(), 2));
+		Object[] eigenvalEigenvect  = Matrix.eigenValuesAndVector(Msq);
+		
+		ComplexNumber[] MsqEigs = (ComplexNumber[])eigenvalEigenvect[0];
+		
+		ComplexNumber[][] MsqEigVecs = (ComplexNumber[][])eigenvalEigenvect[1];
+		
+		double[] MsqArgs = ComplexNumber.angle(MsqEigs);
+		
+		double[] MArgs = new double[MsqArgs.length];
+		Arrays.sort(MArgs);
 
-		s = Math.sqrt(Math.pow(that.getElement(0, 3).getReal(), 2)
-			    	+ Math.pow(that.getElement(1, 3).getReal(), 2)
-			    	+ Math.pow(that.getElement(2, 3).getReal(), 2)
-			    	+ Math.pow(that.getElement(3, 3).getReal(), 2));
+		for (int i = 0; i < MsqArgs.length; i++)
+			MArgs[i] = MsqArgs[i]/2;
 		
-		// determine signs
-		if (that.getElement(0, 0).getReal() < 0)
-			p = -Math.abs(p);
-		else 
-			p = Math.abs(p);
-		
-		if (that.getElement(0, 1).getReal() < 0)
-			q = -Math.abs(q);
-		else 
-			q = Math.abs(q);
-		
-		if (that.getElement(0, 2).getReal() < 0)
-			r = -Math.abs(r);
-		else 
-			r = Math.abs(r);
-		
-		if (that.getElement(0, 3).getReal() < 0)
-			s = -Math.abs(s);
-		else 
-			s = Math.abs(s);
+		double sum = 0;
+		double t0, t1, t2, t3;
+		for (int i = 0; i < MArgs.length; i++)
+			sum += MArgs[i];
+ 
+////		System.out.println(sum);
 
-		if (a < 0) {
-			p = -p;
-			q = -q;
-			r = -r; 
-			s = -s;
+		ComplexNumber[][] k2C = new ComplexNumber[4][4];
+		
+		if( Math.abs(sum - Math.PI) < 0.00001 ) {
+			t0 = MArgs[1];
+			t1 = MArgs[2];
+			t2 = MArgs[3]-Math.PI;
+			t3 = MArgs[0];
+		
+			k2C[0] = MsqEigVecs[1];
+			k2C[1] = MsqEigVecs[2];
+			k2C[2] = MsqEigVecs[3];
+			k2C[3] = MsqEigVecs[0];
+			
+			for (int i = 0; i < k2C[3].length; i++)
+				k2C[3][i].neg();
+			
+		} else {
+			t0 = MArgs[2];
+			t1 = MArgs[3];
+			t2 = MArgs[0];
+			t3 = MArgs[1];
+			
+			k2C[0] = MsqEigVecs[2];
+			k2C[1] = MsqEigVecs[3];
+			k2C[2] = MsqEigVecs[0];
+			k2C[3] = MsqEigVecs[1];
 		}
 		
-		return new double[]{p, q, r, s};
+		Matrix K2so4 = Matrix.transpose(new Matrix(k2C));
+		K2so4.adjoint();
+		
+		Matrix A = Matrix.matrixFromArgs(t0, t1, t2, t3);
+		
+		abc[0] = (t0 + t1)/2.0;
+		abc[1] = (t1 + t3)/2.0;
+		abc[2] = (t0 + t3)/2.0;
+
+		return new Matrix[]{K2so4, A};
 	}
+	
+	public static double[] positiveSU2SU2(Matrix that) {
+		Matrix A = associateSO4(that);
+	
+		double[] abcd = abcd(A);
+		double[] pqrs = pqrs(A, abcd[0]);
+		
+		double t1 = abcd[0]*abcd[1];
+		double t2 = abcd[0]*abcd[2];
+		double t3 = pqrs[0]*pqrs[1];
+		double t4 = pqrs[0]*pqrs[2];
+		
+		double[] abcdf = new double[4];
+		double[] pqrsf = new double[4];
+
+		if (t1<0 && t2<0 && t3>0 && t4<0 ) {   // case ZI
+			abcdf[0] = -abcd[2];
+			abcdf[1] = abcd[3];
+			abcdf[2] = abcd[0];
+			abcdf[3] = -abcd[1];
+			pqrsf[0] = pqrs[2];
+			pqrsf[1] = pqrs[3];
+			pqrsf[2] = -pqrs[0];
+			pqrsf[3] = -pqrs[1];
+		} else if (t1<0 && t2>0 && t3<0 && t4<0 ) {   // case IZ
+			abcdf[0] = abcd[1];
+			abcdf[1] = -abcd[0];
+			abcdf[2] = abcd[3];
+			abcdf[3] = -abcd[2];
+			pqrsf[0] = -pqrs[1];
+			pqrsf[1] = pqrs[0];
+			pqrsf[2] = pqrs[3];
+			pqrsf[3] = -pqrs[2];
+		} else if (t1>0 && t2<0 && t3<0 && t4>0 ) {   // case ZZ
+			abcdf[0] = abcd[3];
+			abcdf[1] = abcd[2];
+			abcdf[2] = -abcd[1];
+			abcdf[3] = -abcd[0];
+			pqrsf[0] = -pqrs[3];
+			pqrsf[1] = pqrs[2];
+			pqrsf[2] = -pqrs[1];
+			pqrsf[3] = pqrs[0];
+		} else {   // case II
+			abcdf[0] = abcd[0];
+			abcdf[1] = abcd[1];
+			abcdf[2] = abcd[2];
+			abcdf[3] = abcd[3];
+			pqrsf[0] = pqrs[0];
+			pqrsf[1] = pqrs[1];
+			pqrsf[2] = pqrs[2];
+			pqrsf[3] = pqrs[3];
+		}
+
+		final Matrix leftFactor = leftFactor(abcdf);
+
+		final Matrix rightFactor = rightFactor(pqrsf);
+
+		final double[] a = new double[3];
+		final double[] b = new double[3];
+
+		Thread thread1 = new Thread(new Runnable() {
+			public void run() {
+				Matrix left = Matrix.mul(Matrix.B(), leftFactor, Matrix.adjoint(Matrix.B()));
+				double[] m = SU2SU2(left);
+				a[0] = m[3];
+				a[1] = m[4];
+				a[2] = m[5];
+			}
+		});
+
+		Thread thread2 = new Thread(new Runnable() {
+			public void run() {
+				Matrix right = Matrix.mul(Matrix.B(), rightFactor, Matrix.adjoint(Matrix.B()));
+				double[] m = SU2SU2(right);
+				b[0] = m[0];
+				b[1] = m[1];
+				b[2] = m[2];
+			}
+		});
+
+		thread1.start();
+		thread2.start();
+
+		try {
+			thread1.join();
+			thread2.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
+		
+		return new double[] { a[0], a[1], a[2], b[0], b[1], b[2]};
+
+	}
+	
 	
 }

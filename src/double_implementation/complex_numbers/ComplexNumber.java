@@ -9,7 +9,9 @@ package complex_numbers;
  */
 public class ComplexNumber {
 	
+	// real part of Complex Number
 	private double real;
+	// imaginary part of Complex Number
 	private double imaginary;
 	
 	/**
@@ -111,6 +113,15 @@ public class ComplexNumber {
 		imaginary = (imaginary * that.getReal() - real * that.getImaginary())/denom;
 		real = tmp;
 	}
+	
+	/**
+	 * Negates the complexNumber
+	 */
+	public void neg() {
+		real = -real;
+		imaginary = -imaginary;
+	}
+
 
 	/**
 	 * Returns String { [real] +/- [imaginary]i }
@@ -238,6 +249,30 @@ public class ComplexNumber {
 	 * Returns a new ComplexNumber with -that.re and -that.im
 	 */
 	public static ComplexNumber neg(ComplexNumber that) {
-		return new ComplexNumber(that.getReal(), that.getImaginary());
+		return new ComplexNumber(-that.getReal(), -that.getImaginary());
 	}
+	
+	/**
+	 * Returns arguments of given ComplexNumbers
+	 */
+	public static double[] angle(ComplexNumber... vals) {
+		int len = vals.length;
+		double[] angles = new double[len];
+		
+		for (int i = 0; i < len; i++)
+			angles[i] = Math.atan2(vals[i].getImaginary(), vals[i].getReal());
+		
+		return angles;
+	}
+	
+	/**
+	 * Returns ComplexNumber based on argument (angle tetta)
+	 */
+	public static ComplexNumber argToNum(double arg) {
+		double re = Math.cos(arg);
+		double im = Math.sin(arg);
+		
+		return new ComplexNumber(re, im);
+	}
+	
 }

@@ -323,6 +323,223 @@ public class Matrix {
 	
 	
 	/**
+	 * Returns diagonal matrix, diagonal elements are equal to that elements 
+	 */
+	public static Matrix diag(ComplexNumber[] that) {
+		int len = that.length;
+		ComplexNumber[][] comp = new ComplexNumber[len][len];
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				if (i == j) {
+					comp[i][j] = new ComplexNumber(that[i]);
+				}
+				else {
+					comp[i][j] = new ComplexNumber();
+				}
+			}
+		}
+		
+		return new Matrix(comp);
+	}
+
+	/**
+	 * Returns diagonal Matrix with values e^(i*tetta0), e^(i*tetta1) ....  
+	 */
+	public static Matrix matrixFromArgs(double... args) {
+		int len = args.length;
+		ComplexNumber[] diagonalElements = new ComplexNumber[len];
+		for (int i = 0; i < len; i++) {
+			diagonalElements[i] = ComplexNumber.argToNum(args[i]);
+		}
+		
+		ComplexNumber[][] cn = new ComplexNumber[len][len];
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				if (i == j)
+					cn[i][j] = diagonalElements[i];
+				else
+					cn[i][j] = new ComplexNumber();
+					
+			}
+		}
+		
+		return new Matrix(cn);
+	}
+
+	/**
+	 * Compares two matrixes if difference between them is more then 0.000001 returns false 
+	 */
+	public static boolean equals(Matrix first, Matrix second) {
+		if (first.len() != second.len())
+			throw new RuntimeException("Illegal matrix dimensions.");
+		
+		double a, b;
+		ComplexNumber tmp;
+		for (int i = 0; i < first.len(); i++) {
+			for (int j = 0; j < first.len(); j++) {
+				tmp = ComplexNumber.sub(first.getElement(i, j), second.getElement(i, j));  
+				a = Math.abs(tmp.getReal());
+				b = Math.abs(tmp.getImaginary());
+				if (a > 0.000001 || b > 0.000001)
+					return false;
+			}
+		}
+		return true;
+	}
+
+	/**
+	 *	Returns Eigenvalues of the given array 
+	 */
+	public static ComplexNumber[] eigen (Matrix that) {
+		ComplexNumber[][] m = that.getMatrix();
+		int len = m.length;
+		ComplexNumber[] eigens = new ComplexNumber[len];
+	
+		//wraps my objects to objects of opensourcephysics
+		//and uses opensourcephysics functionality to get eigenvalues
+		Complex[][] m_ = new Complex[len][len];
+		Complex[] eigens_ = new Complex[len];
+		Complex[][] vec = new Complex[len][len];
+		boolean[] e = new boolean[len];
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				m_[i][j] = new Complex(m[i][j].getReal(), m[i][j].getImaginary());
+			}
+		}
+		
+		ComplexEigenvalueDecomposition.eigen(m_, eigens_, vec, e);
+		
+		for (int i = 0; i < len; i++) {
+			eigens[i] = new ComplexNumber(eigens_[i].re(), eigens_[i].im());
+		}
+		
+		return eigens;
+	}
+
+	/**
+	 *	Returns EigenVectors of the given array 
+	 */
+	public static ComplexNumber[][] eigenVector (Matrix that) {
+		ComplexNumber[][] m = that.getMatrix();
+		int len = m.length;
+		ComplexNumber[][] eigenVectors = new ComplexNumber[len][len];
+	
+		//wraps my objects to objects of opensourcephysics
+		//and uses opensourcephysics functionality to get eigenvalues
+		Complex[][] m_ = new Complex[len][len];
+		Complex[] eigens_ = new Complex[len];
+		Complex[][] vec = new Complex[len][len];
+		boolean[] e = new boolean[len];
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				m_[i][j] = new Complex(m[i][j].getReal(), m[i][j].getImaginary());
+			}
+		}
+		
+		ComplexEigenvalueDecomposition.eigen(m_, eigens_, vec, e);
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++)
+				eigenVectors[i][j] = new ComplexNumber(vec[i][j].re(), vec[i][j].im());
+		}
+		
+		return eigenVectors;
+	}
+
+	/**
+	 *	Returns Object array where first element is Eigenvalues, the second is Eigenvectors 
+	 */
+	public static Object[] eigenValuesAndVector (Matrix that) {
+		ComplexNumber[][] m = that.getMatrix();
+		int len = m.length;
+		ComplexNumber[] eigens = new ComplexNumber[len];
+		ComplexNumber[][] eigenVectors = new ComplexNumber[len][len];
+	
+		//wraps my objects to objects of opensourcephysics
+		//and uses opensourcephysics functionality to get eigenvalues
+		Complex[][] m_ = new Complex[len][len];
+		Complex[] eigens_ = new Complex[len];
+		Complex[][] vec = new Complex[len][len];
+		boolean[] e = new boolean[len];
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++) {
+				m_[i][j] = new Complex(m[i][j].getReal(), m[i][j].getImaginary());
+			}
+		}
+		
+		ComplexEigenvalueDecomposition.eigen(m_, eigens_, vec, e);
+	
+		for (int i = 0; i < len; i++) {
+			eigens[i] = new ComplexNumber(eigens_[i].re(), eigens_[i].im());
+		}
+	
+		
+		for (int i = 0; i < len; i++) {
+			for (int j = 0; j < len; j++)
+				eigenVectors[i][j] = new ComplexNumber(vec[i][j].re(), vec[i][j].im());
+		}
+		
+		return new Object[]{eigens, eigenVectors};
+	}
+	
+	/**
+	 * Returns sum of the row elements in the given Matrix
+	 */
+	public static ComplexNumber rowSum(Matrix that, int row) {
+		ComplexNumber sum = new ComplexNumber();
+		if (row > that.len())
+			return null;
+		for (int i = 0; i < that.len(); i++)
+			sum.add(that.getElement(row, i));
+		
+		return sum;
+	}
+
+	/**
+	 * Returns sum of the column elements in the given Matrix
+	 */
+	public static ComplexNumber colSum(Matrix that, int col) {
+		ComplexNumber sum = new ComplexNumber();
+		if (col > that.len())
+			return null;
+		for (int i = 0; i < that.len(); i++)
+			sum.add(that.getElement(i, col));
+		
+		return sum;
+	}
+
+	/**
+	 * Returns Kronecker product of two given Matrixes
+	 */
+	public static Matrix kron(Matrix a, Matrix b) {
+		int lenA = a.len();
+		int lenB = b.len();
+		
+		Matrix c = new Matrix(lenA*lenB);
+		
+		for (int i = 0; i < lenA; i++) {
+			int iOffset = i*lenB;
+			for (int j = 0; j < lenA; j++) {
+				int jOffset = j*lenB;
+				ComplexNumber aij = a.getElement(i, j);
+				
+				for (int k = 0; k < lenB; k++) {
+					for (int l = 0; l < lenB; l++) {
+						c.setElement(iOffset+k, jOffset+l, ComplexNumber.mul(aij, b.getElement(k, l)));
+					}
+				}
+			}
+		}		
+		
+		return c;
+	}
+	
+	
+	/**
 	 * Returns Pauli X matrix<br />
 	 * | 0  1 | <br />
 	 * | 1  0 | 
@@ -393,56 +610,4 @@ public class Matrix {
 				{new ComplexNumber(1, 0), new ComplexNumber(), new ComplexNumber(), new ComplexNumber(0, -1)}
 		});
 	}
-	
-	/**
-	 * Compares two matrixes if difference between them is more then 0.000001 returns false 
-	 */
-	public static final boolean equals(Matrix first, Matrix second) {
-		if (first.len() != second.len())
-			throw new RuntimeException("Illegal matrix dimensions.");
-		
-		double a, b;
-		ComplexNumber tmp;
-		for (int i = 0; i < first.len(); i++) {
-			for (int j = 0; j < first.len(); j++) {
-				tmp = ComplexNumber.sub(first.getElement(i, j), second.getElement(i, j));  
-				a = Math.abs(tmp.getReal());
-				b = Math.abs(tmp.getImaginary());
-				if (a > 0.000001 || b > 0.000001)
-					return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 *	Returns Eigenvalues of the given array 
-	 */
-	public static final ComplexNumber[] eigen (Matrix that) {
-		ComplexNumber[][] m = that.getMatrix();
-		int len = m.length;
-		ComplexNumber[] eigens = new ComplexNumber[len];
-
-		//wraps my objects to objects of opensourcephysics
-		//and uses opensourcephysics functionality to get eigenvalues
-		Complex[][] m_ = new Complex[len][len];
-		Complex[] eigens_ = new Complex[len];
-		Complex[][] vec = new Complex[len][len];
-		boolean[] e = new boolean[len];
-		
-		for (int i = 0; i < len; i++) {
-			for (int j = 0; j < len; j++) {
-				m_[i][j] = new Complex(m[i][j].getReal(), m[i][j].getImaginary());
-			}
-		}
-		
-		ComplexEigenvalueDecomposition.eigen(m_, eigens_, vec, e);
-		
-		for (int i = 0; i < len; i++) {
-			eigens[i] = new ComplexNumber(eigens_[i].re(), eigens_[i].im());
-		}
-		
-		return eigens;
-	}
-
 }

@@ -216,6 +216,21 @@ public class Matrix {
 	}
 	
 	/**
+	 * Given Unitary Matrix makes it Special Unitary 
+	 */
+	public void makeSpecial() {
+		ComplexNumber determ = Matrix.determinant(this);
+		if (ComplexNumber.abs(determ) == 0)
+			throw new RuntimeException("determinant is zero");
+		int size = len();
+		for(int i = 0; i < size; i++) {
+			for(int j = 0; j < size; j++) {
+				matrix[i][j].div(determ);
+			}
+		}
+	}
+
+	/**
 	 * Returnes dimension of the matrix
 	 */
 	public int len() {
@@ -538,6 +553,66 @@ public class Matrix {
 		return c;
 	}
 	
+	/**
+	 * Returns determinant of the Matrix
+	 */
+	public static ComplexNumber determinant(Matrix that) {
+		int n = that.len();
+		ComplexNumber determinant = new ComplexNumber(1., 0);
+		ComplexNumber[][] B = new ComplexNumber[n][n];
+		int row[] = new int[n];
+		int hold, I_pivot;
+		ComplexNumber pivot;
+		double abs_pivot;
+		
+		for (int i = 0; i < n; i++) {
+			row[i] = i;
+			for (int j = 0; j < n; j++) {
+				B[i][j] = that.getElement(i, j);
+			}
+		}
+		
+		for (int k = 0; k < n-1; k++) {
+			pivot = B[row[k]][k];
+			abs_pivot = ComplexNumber.abs(pivot);
+			I_pivot = k;
+			for(int i = k; i<n; i++) {
+				if(ComplexNumber.abs(B[row[i]][k])>abs_pivot) {
+					I_pivot = i;
+					pivot = B[row[i]][k];
+					abs_pivot = ComplexNumber.abs(pivot);
+				}
+			}
+		
+			if(I_pivot != k) {
+				hold = row[k];
+				row[k] = row[I_pivot];
+				row[I_pivot] = hold;
+				determinant.neg();
+			}
+
+			if(abs_pivot<1.0E-10) {
+				return new ComplexNumber(0.0, 0.0);
+			}
+			determinant.mul(pivot);
+
+			for(int j = k+1; j<n; j++) {
+				B[row[k]][j].div(B[row[k]][k]);
+			}
+
+			for(int i = 0; i<n; i++) {
+				if(i!=k) {
+					for(int j = k+1; j<n; j++) {
+						B[row[i]][j].sub(ComplexNumber.mul(B[row[i]][k], B[row[k]][j]));
+					}
+				}
+			}
+
+		}
+		
+		return ComplexNumber.mul(determinant, B[row[n-1]][n-1]);
+	}
+	
 	
 	/**
 	 * Returns Pauli X matrix<br />
@@ -579,7 +654,20 @@ public class Matrix {
 	}
 	
 	/**
-	 * Returnes CNOT <br />
+	 * Returns Identity Matrix <br />
+	 * | 1 0 |<br />
+	 * | 0 1 |
+	 */
+	public static final Matrix Identity2x2() {
+		Matrix id = new Matrix(new ComplexNumber[][]{
+				{new ComplexNumber(1., 0), new ComplexNumber()},
+				{new ComplexNumber(), new ComplexNumber(1., 0)}
+				});
+		return id;
+	}
+	
+	/**
+	 * Returns CNOT <br />
 	 * | 1 0 0 0 |<br />
 	 * | 0 1 0 0 |<br />
 	 * | 0 0 0 1 |<br />
